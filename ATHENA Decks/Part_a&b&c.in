@@ -1,0 +1,106 @@
+go athena
+
+# Fabrication 14041 
+# Amirhossein Zahedi 404211388
+
+# Mesh
+line x loc = 0.0  spacing=0.01
+line x loc = 1.0  spacing=0.01
+
+line y loc = 0.0  spacing = 0.01 
+line y loc = 0.5  spacing = 0.02
+line y loc = 2.0  spacing = 0.10
+
+# Initializing the Wafer
+#init silicon c.boron=1e15 orientation=100
+
+# For part f
+init silicon c.boron=1e18 orientation=100  
+
+
+# --- Part a ---
+
+# Pre-Depositin
+method fermi
+diffus time=5 minutes temp=900 nitro c.phosphor=4e20 
+
+#save the structure
+#structure outfile=parta_predep.str
+
+#plot the final profile
+#tonyplot parta_predep.str
+
+
+
+# --- Part b ---
+
+# Drive-in
+# 10 Minutes
+diffus time=10 minutes temp=900 nitro 
+#structure outfile=partb_drivein10.str
+
+# 30 Minutes
+diffus time=20 minutes temp=900 nitro
+#structure outfile=partb_drivein30.str 
+
+# 90 Minutes
+diffus time=60 minutes temp=900 nitro 
+#structure outfile=partb_drivein90.str
+
+# 300 Minutes
+diffus time=210 minutes temp=900 nitro 
+#structure outfile=partb_drivein300.str
+
+#plot the final profile
+#tonyplot -overlay partb_drivein10.str partb_drivein30.str partb_drivein90.str partb_drivein300.str
+
+
+
+# --- Part c first part ---
+
+# Defining first stages again
+line x loc = 0.0  spacing=0.01
+line x loc = 1.0  spacing=0.01
+line y loc = 0.0  spacing = 0.01 
+line y loc = 0.5  spacing = 0.02
+line y loc = 10.0  spacing = 0.05
+
+#init silicon c.boron=1e15 orientation=100
+# For part f
+init silicon c.boron=1e18 orientation=100 
+
+diffus time=5 minutes temp=900 nitro c.phosphor=4e20 
+
+# Time Sweep
+
+set t_start = 0.01
+set t_end   = 3000 #until 3000 minutes
+set steps   = 100
+
+set ratio = exp((log($t_end)-log($t_start)) / ($steps-1)) # for adding time logaritmic
+
+set time = $t_start
+set t_delta = $t_start
+
+set outfile=results_sweep.dat
+
+system echo Time(min)   Ns(cm-3)   Rs(ohm/sq)   Xj(um) > $outfile
+
+loop steps=$steps
+
+	diffus time=$t_delta temp=900
+	extract name="Ns" max(phosphorus)
+	extract name="Rs" sheet.res
+	extract name="X" xj silicon mat.occno=1
+
+	system echo $time   $Ns   $Rs   $X >> $outfile
+
+	set t_delta = $time * ($ratio-1)
+	set time = $time * $ratio
+
+l.end
+
+#************** It contineus in MATLAB
+# And part c has the second deck
+
+quit

@@ -1,0 +1,36 @@
+go athena
+
+# --- Part c continue & Part d and Part e ---
+
+# In this part c and d as you can see in the report, I will change timing to reach defined Xj and Rs.
+
+# In part e as you can see in the report, I will change parameters and repeat the process.
+
+# Defining first stages again
+line x loc = 0.0  spacing=0.01
+line x loc = 1.0  spacing=0.01
+line y loc = 0.0  spacing = 0.01 
+line y loc = 0.5  spacing = 0.02
+line y loc = 11.0  spacing = 0.02
+
+#init silicon c.boron=1e15 orientation=100
+
+# for part F
+init silicon c.boron=1e18 orientation=100
+
+diffus time=2 minutes temp=1100 c.phosphor=4e20 
+#deposit nitride thick=0.2
+diffus time=1100 temp=1240
+#etch nitride all
+
+diffus time=1.5 minutes temp=1105 c.phosphor=4e20 
+diffus time=1000 temp=1210 nitro
+
+
+
+extract name="Ns" max(phosphorus)
+extract name="Rs" sheet.res
+extract name="X" xj silicon mat.occno=1
+
+
+quit

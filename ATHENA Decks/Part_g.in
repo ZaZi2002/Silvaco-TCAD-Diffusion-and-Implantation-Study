@@ -1,0 +1,86 @@
+go athena
+
+# --- Part g ---
+
+line x loc = 0.0  spacing=0.01
+line x loc = 1.0  spacing=0.01
+line y loc = 0.0  spacing = 0.01 
+line y loc = 0.5  spacing = 0.02
+line y loc = 5.0  spacing = 0.02
+
+init silicon c.boron=1e15 orientation=100
+
+# Dose comparison
+implant phosphor dose=1.0e14 energy=200 tilt=7 rotation=30 
+structure outfile=partg_implantation1e14.str
+extract name="Rs_1e14" sheet.res
+
+implant phosphor dose=1.0e15 energy=200 tilt=7 rotation=30 
+structure outfile=partg_implantation1e15.str
+extract name="Rs_1e15" sheet.res
+
+implant phosphor dose=1.0e16 energy=200 tilt=7 rotation=30 
+structure outfile=partg_implantation1e16.str
+extract name="Rs_1e16" sheet.res
+
+implant phosphor dose=1.0e17 energy=200 tilt=7 rotation=30 
+structure outfile=partg_implantation1e17.str
+extract name="Rs_1e17" sheet.res
+
+tonyplot -overlay partg_implantation1e14.str partg_implantation1e15.str partg_implantation1e16.str partg_implantation1e17.str
+
+deposit nitride thick=0.2
+
+
+# Anneal time comparison
+diffus time=10 temp=1000
+structure outfile=partg_anneal_10mins.str
+extract name="Rs_t10" sheet.res
+
+diffus time=20 temp=1000
+structure outfile=partg_anneal_30mins.str
+extract name="Rs_t30" sheet.res
+
+diffus time=60 temp=1000
+structure outfile=partg_anneal_90mins.str
+extract name="Rs_t90" sheet.res
+
+diffus time=210 temp=1000
+structure outfile=partg_anneal_300mins.str
+extract name="Rs_t300" sheet.res
+
+etch nitride all
+
+tonyplot -overlay partg_anneal_10mins.str partg_anneal_30mins.str partg_anneal_90mins.str partg_anneal_300mins.str
+
+
+# Energy comparison
+line x loc = 0.0  spacing=0.01
+line x loc = 1.0  spacing=0.01
+line y loc = 0.0  spacing = 0.01 
+line y loc = 0.5  spacing = 0.02
+line y loc = 5.0  spacing = 0.02
+
+init silicon c.boron=1e15 orientation=100
+
+implant phosphor dose=2.0e15 energy=10 tilt=7 rotation=30 
+structure outfile=partg_energy10.str
+extract name="Rs_E10" sheet.res
+
+implant phosphor dose=2.0e15 energy=50 tilt=7 rotation=30 
+structure outfile=partg_energy50.str
+extract name="Rs_E50" sheet.res
+
+implant phosphor dose=2.0e15 energy=100 tilt=7 rotation=30 
+structure outfile=partg_energy100.str
+extract name="Rs_E100" sheet.res
+
+implant phosphor dose=2.0e15 energy=200 tilt=7 rotation=30 
+structure outfile=partg_energy200.str
+extract name="Rs_E200" sheet.res
+
+tonyplot -overlay partg_energy10.str partg_energy50.str partg_energy100.str partg_energy200.str
+
+
+
+quit
