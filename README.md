@@ -6,6 +6,8 @@ Amirhossein Zahedi
 Electrical Engineering  
 Micro- and Nanoelectronics
 
+This project is designed by Prof. Bijan Rashidian and his TA Reza Khoddami for the Fabrication Course, Winter 2026.
+
 ---
 
 ## Project Overview
